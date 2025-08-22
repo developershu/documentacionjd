@@ -5,13 +5,13 @@
         <!-- Encabezado con condicional para botón de creación y categoría -->
         <div class="d-flex justify-content-between align-items-center mb-4 p-3 rounded"
             style="background-color: #003764; color: white;">
-            <h2>
+            <h3>
                 @can('create', App\Models\Documento::class)
                     Junta Directiva
                 @else
                     Junta Directiva
                 @endcan
-            </h2>
+            </h3>
             @can('create', App\Models\Documento::class)
                 <div class="d-flex gap-2">
                     <a href="{{ route('documentos.create') }}" class="btn btn-light" style="color: #003764;">
@@ -19,7 +19,7 @@
                     </a>
                     <a href="#" class="btn btn-light" style="color: #003764;" data-bs-toggle="modal"
                         data-bs-target="#createCategoryModal">
-                        <i class="fas fa-folder-plus"></i> Nueva Categoría
+                        <i class="fas fa-folder-plus"></i> Nueva Carpeta
                     </a>
                 </div>
             @endcan
@@ -31,16 +31,17 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="createCategoryModalLabel">Crear Nueva Categoría</h5>
+                        <h5 class="modal-title" id="createCategoryModalLabel">Crear Nueva Carpeta</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('categorias.store') }}" method="POST">
+                        <form id="createCategoryForm" action="{{ route('categorias.store') }}" method="POST">
                             @csrf
                             <div class="mb-3">
-                                <label for="nombre" class="form-label">Nombre de la Categoría</label>
+                                <label for="nombre_categoria" class="form-label">Nombre de la Carpeta</label>
+                            
                                 <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria"
-                                    placeholder="Nombre de la nueva categoría" required>
+                                    placeholder="" required>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -50,6 +51,7 @@
                                 </button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -57,10 +59,10 @@
 
 
         <!-- Alertas y mensajes
-            @if (session('success'))
+                @if (session('success'))
     <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
+                        {{ session('success') }}
+                    </div>
     @endif-->
 
         <!-- Lógica del Explorador de Categorías con Bootstrap Accordion -->
@@ -74,13 +76,13 @@
                 @foreach ($categorias as $categoria)
                     <div class="accordion-item mb-4 shadow-sm">
 
-                       
+
 
                         <h2 class="accordion-header" id="heading-{{ $categoria->id }}">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse-{{ $categoria->id }}" aria-expanded="false"
                                 aria-controls="collapse-{{ $categoria->id }}">
-                                
+
                                 <div class="d-flex w-100 justify-content-between align-items-center">
                                     <div>
                                         <i class="fas fa-folder text-warning me-2"></i>
@@ -89,13 +91,13 @@
 
 
 
-                                   
+
 
                                 </div>
                             </button>
                         </h2>
 
-                        
+
 
                         <div id="collapse-{{ $categoria->id }}" class="accordion-collapse collapse"
                             aria-labelledby="heading-{{ $categoria->id }}" data-bs-parent="#accordionCategorias">
@@ -166,7 +168,7 @@
                                         </table>
                                     </div>
 
-                                    
+
 
                                     <!-- Tarjetas (visible en móviles) -->
                                     <div class="d-block d-md-none">
@@ -175,32 +177,34 @@
                                         @endforeach
                                     </div>
                                 @endif
-                            
-                             @can('create', App\Models\Documento::class)
-                                        <div class="d-flex gap-2">
-                                            <a href="{{ route('categorias.edit', $categoria) }}"
-                                                class="btn btn-sm btn-outline-secondary">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
 
-                                            <form action="{{ route('categorias.destroy', $categoria) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta categoría? Esto eliminará todos los documentos asociados.');">
+                                @can('create', App\Models\Documento::class)
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('categorias.edit', $categoria) }}"
+                                            class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+
+                                        <form action="{{ route('categorias.destroy', $categoria) }}" method="POST"
+                                            onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta categoría? Esto eliminará todos los documentos asociados.');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-danger ">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
-                                        </div>
-                                        
-                                    @endcan
-                            
-                            
-                            
+                                    </div>
+                                @endcan
+
+
+
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
         @endif
-    </div>
-@endsection
+    </div> 
+@endsection 
+
+

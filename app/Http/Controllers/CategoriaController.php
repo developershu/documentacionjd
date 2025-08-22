@@ -22,24 +22,33 @@ class CategoriaController extends Controller
     
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                'nombre_categoria' => 'required|string|max:255|unique:categorias,nombre',
-            ]);
-
-            $categoria = new Categoria();
-            $categoria->nombre = $request->nombre_categoria;
-            $categoria->save();
-
-            return redirect()->route('documentos.index')->with('success');
+        
+        
+        
+        // Validación del campo 'nombre'
+        $request->validate([
+            'nombre_categoria' => 'required|string|max:255|unique:categorias,nombre',
             
-        } catch (\Exception $e) {
+        ]);
+
+       
+
+        // Crea la nueva categoría
+        $categoria = Categoria::create([
+            'nombre' => $request->input('nombre_categoria'),
+        ]);
+
+        // Si la petición es AJAX, devuelve una respuesta JSON
+        if ($request->ajax()) {
             return response()->json([
-                'success' => false,
-                'message' => 'Error al crear la categoría: ' . $e->getMessage(),
-                'errors' => ['nombre_categoria' => [$e->getMessage()]]
-            ], 422);
+                'success' => true,
+                'message' => 'Categoría creada exitosamente.',
+                'categoria' => $categoria
+            ]);
         }
+
+        // Si no es una petición AJAX, redirige a la página principal de documentos
+        return redirect()->route('documentos.index')->with('success');
     }
 
     
