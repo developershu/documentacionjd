@@ -17,10 +17,12 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <script href="https://cdn.tailwindcss.com" rel="stylesheet"></script> 
+
+    
 
 
-
+    
 
     @stack('styles')
 </head>
@@ -33,7 +35,7 @@
                 {{-- Enlace del logo como parte del brand --}}
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="http://172.22.118.101:81/proyectsImages/logo_documentacion.png"
-                        alt="Logo" style="height: 60px; width: auto;" class="img-fluid">
+                        alt="Logo" style="height: 80px; width: auto;" class="img-fluid">
                 </a>
 
                 {{-- Botón para menú en móviles (toggler) --}}

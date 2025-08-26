@@ -70,6 +70,6 @@ class Documento extends Model
             
         ];
 
-        return $tipos[$extension] ?? 'Archivo';
+        return $tipos[$extension] ?? strtoupper($extension);
     }
 }

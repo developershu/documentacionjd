@@ -22,12 +22,13 @@ class DocumentoController extends Controller
 
     public function index()
     {
-        // Cargar todas las categorías y sus documentos
-        $categorias = Categoria::with(['documentos' => function ($query) {
-            if (!auth()->user()->hasRole('admin')) {
-                $query->where('estado', 'publicado');
-            }
-        }])->get();
+        // Cargar las categorías principales (sin padre) con sus subcategorías y documentos
+        $categorias = Categoria::whereNull('parent_id')
+            ->with(['subcategorias', 'documentos' => function ($query) {
+                if (!auth()->user()->hasRole('admin')) {
+                    $query->where('estado', 'publicado');
+                }
+            }])->get();
 
         return view('documentos.index', compact('categorias'));
     }
@@ -50,29 +51,24 @@ class DocumentoController extends Controller
             'link' => 'nullable|url'
         ]);
 
-        $archivoPath = null;
+        $documento = new Documento;
+        $documento->titulo = $request->titulo;
+        $documento->descripcion = $request->descripcion;
+        $documento->estado = $request->estado;
+        $documento->link = $request->link;
+        $documento->user_id = auth()->id(); // Asigna el usuario autenticado
+        $documento->categoria_id = $request->categoria_id;
+
+      
 
         if ($request->hasFile('archivo')) {
-            $file = $request->file('archivo');
-            $categoria = Categoria::find($request->categoria_id); // Obtiene el nombre de la categoría
-            
-            // Genera una ruta de almacenamiento usando el nombre de la categoría
-            $carpetaCategoria = Str::slug($categoria->nombre);
-            $filename = $this->generateFilename($file);
-            $archivoPath = $file->storeAs("documentos/{$carpetaCategoria}", $filename, 'public');
+            $path = $request->file('archivo')->store('documentos', 'public');
+            $documento->archivo = $path;
         }
-
-        $documento = auth()->user()->documentos()->create([
-            'titulo' => $request->titulo,
-            'descripcion' => $request->descripcion,
-            'categoria_id' => $request->categoria_id, // Guarda el ID de la categoría
-            'archivo' => $archivoPath,
-            'estado' => $request->estado,
-            'link' => $request->link,
-        ]);
+        $documento->save();
 
         return redirect()->route('documentos.index')
-            ->with('success');
+            ->with('success', );
     }
 
     public function storeCategoria(Request $request)

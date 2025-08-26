@@ -28,7 +28,7 @@ class CategoriaController extends Controller
         // Validación del campo 'nombre'
         $request->validate([
             'nombre_categoria' => 'required|string|max:255|unique:categorias,nombre',
-            
+            'parent_id' => 'nullable|exists:categorias,id', // 'parent_id' puede ser nulo, pero si se proporciona, debe existir en la tabla 'categorias'
         ]);
 
        
@@ -36,6 +36,7 @@ class CategoriaController extends Controller
         // Crea la nueva categoría
         $categoria = Categoria::create([
             'nombre' => $request->input('nombre_categoria'),
+            'parent_id' => $request->input('parent_id'),
         ]);
 
         // Si la petición es AJAX, devuelve una respuesta JSON
@@ -68,9 +69,11 @@ class CategoriaController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255|unique:categorias,nombre,'.$categoria->id,
+            'parent_id' => 'nullable|exists:categorias,id',
         ]);
     
         $categoria->nombre = $request->nombre;
+        $categoria->parent_id = $request->parent_id;
         $categoria->save();
     
         return redirect()->route('documentos.index')->with('success');

@@ -22,26 +22,27 @@
 
 
     <!-- Estilos personalizados -->
-    <style>
-        .bg-fondo {
+     <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
             background-color: #003764;
-            /* Color de fondo */
+            /* Estilo para el fondo, equivalente a .bg-fondo de Tailwind */
         }
 
-        .bg- {
-            background-color: #003764;
-            /* Color de fondo del contenedor */
+        .bg-custom-card {
+            background-color: #f8f9fa;
         }
 
         .btn-login {
             background-color: #003764;
             border-color: #f7f7f7;
+            color: white;
         }
 
         .btn-login:hover {
             background-color: #004b86;
-            /* Un tono más claro al hacer hover */
             border-color: #ffffff;
+            color: white;
         }
     </style>
 </head>
@@ -52,14 +53,16 @@
 
         <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg- shadow overflow-hidden sm:rounded-lg">
             <div class="flex justify-center mb-4">
-                <img src="https://github.com/developershu/proyectimages/blob/main/logo_documentacion.png?raw=true"
-                    alt="Logo de la Empresa" class="h-26 w-26">
+                <img src="http://172.22.118.101:81/proyectsImages/logo_documentacion.png"
+                    alt="Logo de la Empresa" class="h-26 w-26 img-fluid" >
             </div>
             @yield('content')
         </div>
     </div>
     <!-- Bootstrap JS Bundle con Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    @stack('scripts')
 </body>
 
 </html>

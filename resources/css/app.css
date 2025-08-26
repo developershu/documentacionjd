@@ -1,7 +1,90 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+.accordion-header .btn {
+    padding: 0.35rem;
+    /* botones más compactos */
+    width: 32px;
+    /* ancho fijo */
+    height: 32px;
+    /* alto fijo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    /* forma circular */
+    border: none;
+    /* sin borde */
+    background-color: #f8f9fa;
+    /* gris claro */
+    color: #495057;
+    /* gris oscuro */
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* sombra sutil */
+}
 
+.accordion-header .btn:hover {
+    background-color: #e9ecef;
+    /* hover gris más oscuro */
+    transform: scale(1.1);
+    /* efecto suave */
+}
 
+.accordion-header .btn-outline-danger {
+    background-color: #fff0f0;
+    color: #dc3545;
+}
 
-       
+.accordion-header .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.accordion-header .btn-outline-info {
+    background-color: #f0f8ff;
+    color: #0dcaf0;
+}
+
+.accordion-header .btn-outline-info:hover {
+    background-color: #0dcaf0;
+    color: #fff;
+}
+
+.accordion-header .btn-outline-secondary {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+.accordion-header .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* Soporte para submenús en dropdown Bootstrap */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-left: 0.1rem;
+    margin-right: 0.1rem;
+    background-color: #ffffff; /* color normal */
+    border-left: 2px solid #003764; /* opcional: marca jerarquía */
+}
+
+/* Cuando está abierto */
+.dropdown-submenu .dropdown-menu.show {
+    background-color: #1571c2; /* azul clarito */
+}
+
+/* Cambiar color del link de subcarpeta */
+.dropdown-submenu > .dropdown-toggle {
+    color: #003764;
+    font-weight: 500;
+}
+
+/* Al abrir, resaltar */
+.dropdown-submenu > .dropdown-toggle.active {
+    color: #ff5722; /* naranja para destacar */
+    font-weight: bold;
+}

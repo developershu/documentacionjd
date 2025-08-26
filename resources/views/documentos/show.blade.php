@@ -20,7 +20,7 @@
                 <div class="mb-4">
                     <p class="lead">{{ $documento->descripcion }}</p>
 
-
+                
                     @if ($documento->archivo && Storage::disk('public')->exists($documento->archivo))
                         <a href="{{ asset('storage/' . $documento->archivo) }}" target="_blank" class="btn btn-outline-success"
                             style="background-color: #003764 ; color: white;">
@@ -29,12 +29,12 @@
                     @endif
 
 
-
+                <div class="mt-4">
                     @if ($documento->link)
                         <a href="{{ $documento->link }}" target="_blank">{{ $documento->link }}</a>
                     @endif
 
-
+                </div>       
 
                 </div>
 
