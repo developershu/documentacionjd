@@ -98,7 +98,10 @@ class DocumentoController extends Controller
 
     public function edit(Documento $documento)
     {
-        return view('documentos.edit', compact('documento'));
+        $this->authorize('update', $documento);
+        // Se carga todas las categorías para la vista de edición.
+        $categorias = Categoria::all();
+        return view('documentos.edit', compact('documento', 'categorias'));
     }
 
     public function update(Request $request, Documento $documento)
@@ -139,11 +142,27 @@ class DocumentoController extends Controller
 
     public function destroy(Documento $documento)
     {
-        Storage::delete('public/' . $documento->archivo);
-        $documento->delete();
+        try {
+            // 1. Autorizar la eliminación del documento
+            $this->authorize('delete', $documento);
 
-        return redirect()->route('documentos.index')
-            ->with('success');
+            // 2. Eliminar primero los comentarios asociados para evitar errores de integridad referencial.
+            $documento->comentarios()->delete();
+
+            // 3. Eliminar el archivo del almacenamiento si existe.
+            if ($documento->archivo) {
+                Storage::delete('public/' . $documento->archivo);
+            }
+            
+            // 4. Eliminar el registro del documento de la base de datos.
+            $documento->delete();
+
+            // 5. Redirigir con un mensaje de éxito.
+            return redirect()->route('documentos.index')->with('success', 'Documento eliminado exitosamente.');
+        } catch (\Exception $e) {
+            // Manejar la excepción y redirigir con un mensaje de error.
+            return redirect()->route('documentos.index')->with('error', 'Ocurrió un error al intentar eliminar el documento. Por favor, inténtelo de nuevo.');
+        }
     }
 
     protected function generateFilename($file)

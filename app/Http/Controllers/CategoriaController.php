@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoriaController extends Controller
 {
+
+    /**
+     * Constructor para aplicar middleware de autenticación.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     
     public function index()
     {
@@ -82,7 +91,27 @@ class CategoriaController extends Controller
     
     public function destroy(Categoria $categoria)
     {
-        $categoria->delete();
-        return redirect()->route('documentos.index')->with('success');
+        try {
+            DB::transaction(function () use ($categoria) {
+                // Elimina todos los documentos y sus comentarios de esta categoría.
+                $documentos = $categoria->documentos;
+                foreach ($documentos as $documento) {
+                    // Primero, elimina los comentarios del documento para evitar errores de integridad.
+                    $documento->comentarios()->delete();
+                    // Luego, elimina el documento.
+                    $documento->delete();
+                }
+
+                // Ahora que todos los documentos (y sus comentarios) han sido eliminados,
+                // eliminamos la categoría.
+                $categoria->delete();
+            });
+
+            return redirect()->route('documentos.index')->with('success');
+
+        } catch (\Exception $e) {
+            // Manejar cualquier error inesperado y redirigir con un mensaje de error.
+            return redirect()->route('documentos.index')->with('error', 'Ocurrió un error al intentar eliminar la categoría y sus documentos.');
+        }
     }
 }
