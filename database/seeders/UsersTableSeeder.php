@@ -20,6 +20,7 @@ public function run()
         ['name' => 'Matias Papini', 'email' => 'matias.papini@hospital.uncu.edu.ar', 'role' => 'user'],
         ['name' => 'Silvana Pagliarulo', 'email' => 'silvana.pagliarulo@hospital.uncu.edu.ar', 'role' => 'user'],
         ['name' => 'Cinthia Chaparro', 'email' => 'cinthia.chaparro@hospital.uncu.edu.ar', 'role' => 'user'],
+        
     ];
 
     foreach ($users as $userData) {

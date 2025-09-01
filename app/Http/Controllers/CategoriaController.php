@@ -102,8 +102,8 @@ class CategoriaController extends Controller
                     $documento->delete();
                 }
 
-                // Ahora que todos los documentos (y sus comentarios) han sido eliminados,
-                // eliminamos la categoría.
+                // Ahora que todos los documentos (y sus comentarios) han sido eliminados, se elimina la categoria
+                
                 $categoria->delete();
             });
 

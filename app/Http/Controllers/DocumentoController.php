@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Categoria;
+use App\Models\User;
+use App\Mail\DocumentoPublicadoMail;
+use Illuminate\Support\Facades\Mail;
+
 
 class DocumentoController extends Controller
 {
@@ -59,7 +63,7 @@ class DocumentoController extends Controller
         $documento->user_id = auth()->id(); // Asigna el usuario autenticado
         $documento->categoria_id = $request->categoria_id;
 
-      
+
 
         if ($request->hasFile('archivo')) {
             $path = $request->file('archivo')->store('documentos', 'public');
@@ -67,8 +71,34 @@ class DocumentoController extends Controller
         }
         $documento->save();
 
+        // --- CÓDIGO AÑADIDO PARA LA NOTIFICACIÓN ---
+
+        // Solo envía la notificación si el documento está en estado 'publicado'
+        if ($documento->estado === 'publicado') {
+
+            $enlacePublicacion = route('documentos.show', $documento->id);
+            // Opción 1: Buscar un usuario específico por su ID
+            // Reemplaza '1' con el ID del usuario que quieres notificar
+            $usuarioDePrueba = User::find(3);
+
+            // Opción 2: Buscar un usuario por su correo electrónico
+            // Reemplaza 'correo_de_prueba@example.com' con el correo del usuario
+            // $usuarioDePrueba = User::where('email', 'correo_de_prueba@example.com')->first();
+
+            if ($usuarioDePrueba) {
+                Mail::to($usuarioDePrueba->email)
+                    ->send(new DocumentoPublicadoMail(
+                        $documento->titulo,
+                        $enlacePublicacion
+                    ));
+            }
+        }
+
+        // --- FIN DEL CÓDIGO AÑADIDO ---
+
+
         return redirect()->route('documentos.index')
-            ->with('success', );
+            ->with('success',);
     }
 
     public function storeCategoria(Request $request)
@@ -80,11 +110,11 @@ class DocumentoController extends Controller
         $categoria = Categoria::create([
             'nombre' => $request->nombre_categoria,
         ]);
-        
+
         // Retorna una respuesta JSON para que el modal funcione sin recargar
         return response()->json([
             'success' => true,
-            
+
             'categoria' => $categoria
         ]);
     }
@@ -129,8 +159,8 @@ class DocumentoController extends Controller
 
             $file = $request->file('archivo');
             $filename = $this->generateFilename($file);
-            
-            
+
+
             $data['archivo'] = $file->storeAs('documentos', $filename, 'public');
         }
 
@@ -153,12 +183,12 @@ class DocumentoController extends Controller
             if ($documento->archivo) {
                 Storage::delete('public/' . $documento->archivo);
             }
-            
+
             // 4. Eliminar el registro del documento de la base de datos.
             $documento->delete();
 
             // 5. Redirigir con un mensaje de éxito.
-            return redirect()->route('documentos.index')->with('success', 'Documento eliminado exitosamente.');
+            return redirect()->route('documentos.index')->with('success',);
         } catch (\Exception $e) {
             // Manejar la excepción y redirigir con un mensaje de error.
             return redirect()->route('documentos.index')->with('error', 'Ocurrió un error al intentar eliminar el documento. Por favor, inténtelo de nuevo.');

@@ -7,6 +7,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\CategoriaController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestEmail;
 
 
 // Rutas Públicas

@@ -2,7 +2,7 @@
 
 @vite(['resources/css/app.css'])
 
-{{-- resources/views/documentos/_category-tree.blade.php --}}
+
 
 <div class="accordion-body p-0">
     @if (!$categorias->isEmpty())
@@ -66,8 +66,8 @@
                             <!-- Documentos en tabla (desktop) -->
                             @if (!$categoria->documentos->isEmpty())
                                 <div class="table-responsive d-none d-md-block p-3">
-                                    <table class="table table-striped table-hover">
-                                        <thead class="bg-secondary text-white">
+                                    <table class="table table-striped table-hover ">
+                                        <thead class="align-items-center mb-4 p-3 text-white" style="background-color: #003764;">
                                             <tr>
                                                 <th>Documento</th>
                                                 <th>Tipo</th>
