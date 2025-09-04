@@ -1,10 +1,9 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
-
 // Variables
-@use 'variables' as *;
-
+@import 'variables';
 // Bootstrap
-
-@use 'bootstrap/scss/bootstrap';
+@import '~bootstrap/scss/bootstrap';
+//Font Awesome
+@import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
 

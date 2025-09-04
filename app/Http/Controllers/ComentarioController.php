@@ -15,8 +15,10 @@ class ComentarioController extends Controller
         $this->middleware('auth');
     }
 
+
     public function store(Request $request)
 {
+    // Validar la entrada
     $validated = $request->validate([
         'contenido' => 'required|string|max:1000',
         'documento_id' => 'required|exists:documentos,id'
@@ -30,14 +32,22 @@ class ComentarioController extends Controller
 
     auth()->user()->comentarios()->save($comentario);
 
-    return back()->with('success'); /*'Comentario creado correctamente' */
+    return back()->with('success'); 
 }
-    public function destroy(Comentario $comentario)
+
+
+     public function destroy(Comentario $comentario)
     {
-        $this->authorize('delete', $comentario);
-        
-        $comentario->delete();
-        
-        return back()->with('success'); /*'Comentario eliminado correctamente' */
+        // Opcional: Verificar que el usuario sea un administrador para eliminar
+        if (!auth()->user()->hasRole('admin')) {
+            return response()->json(['success' => false, 'message' => 'No tienes permiso para realizar esta acción.'], 403);
+        }
+
+        try {
+            $comentario->delete();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al eliminar el comentario.'], 500);
+        }
     }
 }

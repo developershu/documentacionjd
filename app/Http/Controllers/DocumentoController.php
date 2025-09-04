@@ -10,6 +10,8 @@ use App\Models\Categoria;
 use App\Models\User;
 use App\Mail\DocumentoPublicadoMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Gate;
+
 
 
 class DocumentoController extends Controller
@@ -24,18 +26,37 @@ class DocumentoController extends Controller
         $this->middleware('can:delete,documento')->only('destroy');
     }
 
-    public function index()
+   public function index(Request $request)
     {
-        // Cargar las categorías principales (sin padre) con sus subcategorías y documentos
-        $categorias = Categoria::whereNull('parent_id')
-            ->with(['subcategorias', 'documentos' => function ($query) {
-                if (!auth()->user()->hasRole('admin')) {
-                    $query->where('estado', 'publicado');
-                }
-            }])->get();
+        $query = $request->input('q'); // Obtenemos el término de búsqueda
 
-        return view('documentos.index', compact('categorias'));
+        if ($query) {
+            // Si hay un término de búsqueda, filtramos todos los documentos publicados
+            $documentos = Documento::with('categoria')
+                ->where('estado', 'publicado')
+                ->where(function($q) use ($query) {
+                    $q->where('titulo', 'like', '%' . $query . '%')
+                      ->orWhere('descripcion', 'like', '%' . $query . '%');
+                })
+                ->get();
+            
+            // Retornamos la vista con los resultados de la búsqueda en una lista plana
+            return view('documentos.search_results', compact('documentos', 'query'));
+
+        } else {
+            // Si no hay búsqueda, cargamos las categorías y documentos de forma normal
+            $categorias = Categoria::whereNull('parent_id')
+                ->with(['subcategorias', 'documentos' => function ($query) {
+                    if (!auth()->user()->hasRole('admin')) {
+                        $query->where('estado', 'publicado');
+                    }
+                }])->get();
+
+            return view('documentos.index', compact('categorias'));
+        }
     }
+
+    
 
     public function create()
     {
@@ -49,10 +70,11 @@ class DocumentoController extends Controller
         $request->validate([
             'titulo' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
-            'categoria_id' => 'required|exists:categorias,id', // Se valida que la categoría exista
+            'categoria_id' => 'required|exists:categorias,id',
             'archivo' => 'nullable|file|mimes:pdf,docx,pptx|max:10240',
             'estado' => 'required|in:borrador,publicado',
-            'link' => 'nullable|url'
+            'link' => 'nullable|url',
+            'notificar_usuarios' => 'nullable|boolean' // La casilla puede no estar presente
         ]);
 
         $documento = new Documento;
@@ -62,6 +84,7 @@ class DocumentoController extends Controller
         $documento->link = $request->link;
         $documento->user_id = auth()->id(); // Asigna el usuario autenticado
         $documento->categoria_id = $request->categoria_id;
+        $documento->notificar_usuarios = $request->has('notificar_usuarios');
 
 
 
@@ -74,8 +97,7 @@ class DocumentoController extends Controller
         // --- CÓDIGO AÑADIDO PARA LA NOTIFICACIÓN ---
 
         // Solo envía la notificación si el documento está en estado 'publicado'
-        if ($documento->estado === 'publicado') {
-
+        if ($documento->estado === 'publicado' && $documento->notificar_usuarios) {
             $enlacePublicacion = route('documentos.show', $documento->id);
             // Opción 1: Buscar un usuario específico por su ID
             // Reemplaza '1' con el ID del usuario que quieres notificar
@@ -195,10 +217,30 @@ class DocumentoController extends Controller
         }
     }
 
+    public function toggleComentarios(Documento $documento)
+    {
+        // Se verifica que el usuario es un administrador
+        if (auth()->user()->hasRole('admin')) {
+            $documento->comentarios_habilitados = !$documento->comentarios_habilitados;
+            $documento->save();
+            return response()->json(['success' => true, 'estado' => $documento->comentarios_habilitados]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Acceso denegado'], 403);
+    }
+
     protected function generateFilename($file)
     {
         return Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
             . '-' . time()
             . '.' . $file->getClientOriginalExtension();
+    }
+
+    public function toggleNotification(Request $request, Documento $documento)
+    {
+        $documento->notificar_usuarios = $request->boolean('notificar_usuarios');
+        $documento->save();
+
+        return response()->json(['success' => true]);
     }
 }

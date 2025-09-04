@@ -20,11 +20,15 @@ class Documento extends Model
         'link',
         'user_id',
         'categoria_id',
+        'notificar_usuarios',
+        'comentarios_habilitados'
     ];
 
     protected $casts = [
         'created_at' => 'datetime:d/m/Y H:i',
         'updated_at' => 'datetime:d/m/Y H:i',
+        'comentarios_habilitados' => 'boolean',
+        'notificar_usuarios' => 'boolean',
     ];
 
     public function categoria()

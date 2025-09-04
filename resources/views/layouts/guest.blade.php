@@ -9,49 +9,21 @@
 
     <title>Doc Junta Directiva</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <!-- Google Fonts: Montserrat-->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    
 
     <!-- Tailwind CSS (Directo desde CDN para evitar problemas con Vite en esta vista) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    @vite(['resources/sass/app.scss'])
 
-
-    <!-- Estilos personalizados -->
-     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #003764;
-            /* Estilo para el fondo, equivalente a .bg-fondo de Tailwind */
-        }
-
-        .bg-custom-card {
-            background-color: #f8f9fa;
-        }
-
-        .btn-login {
-            background-color: #003764;
-            border-color: #f7f7f7;
-            color: white;
-        }
-
-        .btn-login:hover {
-            background-color: #004b86;
-            border-color: #ffffff;
-            color: white;
-        }
-    </style>
+    
 </head>
 
 <body class="font-sans antialiased">
 
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-fondo">
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0" style="background-color: #003764;">
 
-        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg- shadow overflow-hidden sm:rounded-lg">
+        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg- shadow overflow-hidden sm:rounded-lg" style="background-color: #003764;">
             <div class="flex justify-center mb-4">
                 <img src="http://172.22.118.101:81/proyectsImages/logo_documentacion.png"
                     alt="Logo de la Empresa" class="h-26 w-26 img-fluid" >
@@ -59,8 +31,8 @@
             @yield('content')
         </div>
     </div>
-    <!-- Bootstrap JS Bundle con Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS Bundle con Popper 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>-->
 
     @stack('scripts')
 </body>

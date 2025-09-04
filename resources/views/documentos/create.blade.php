@@ -32,65 +32,72 @@
                         <textarea class="form-control" id="descripcion" name="descripcion" rows="3">{{ old('descripcion') }}</textarea>
                     </div>
 
-                    
+
                     <!-- Campo de Carpeta (Menú desplegable) -->
 
-                        <div class="mb-3">
-                            <label for="categoriaDropdown" class="form-label">Carpeta</label>
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="categoriaDropdown"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Selecciona una carpeta
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="categoriaDropdown" id="categoria-list">
-
-                                    @foreach ($categorias->whereNull('parent_id') as $categoria)
-                                        @include('documentos._category-dropdown-item', [
-                                            'categorias' => $categorias,
-                                        ])
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <!-- Campo oculto para el ID de la categoría -->
-                            <input type="hidden" id="categoria_id" name="categoria_id" required>
-                        </div>
-
-
-                        <div class="mb-3">
-                            <label for="link" class="form-label">Link para los usuarios</label>
-                            <input type="url" class="form-control @error('link') is-invalid @enderror" id="link"
-                                name="link" value="{{ old('link') }}">
-                            <div class="form-text">Ejemplo: https://drive.google.com/...</div>
-                            @error('link')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-
-                        <div class="mb-3">
-                            <label for="archivo" class="form-label">Archivo</label>
-                            <input class="form-control" type="file" id="archivo" name="archivo">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="estado" class="form-label">Estado <span class="text-danger">*</span></label>
-                            <select class="form-select" id="estado" name="estado" required>
-                                <option value="publicado" {{ old('estado') == 'publicado' ? 'selected' : '' }}>Publicado
-                                </option>
-                                <option value="borrador" {{ old('estado') == 'borrador' ? 'selected' : '' }}>Borrador
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('documentos.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Volver
-                            </a>
-                            <button type="submit" class="btn btn-primary"
-                                style="background-color: #003764; color: white !important;">
-                                <i class="fas fa-save"></i> Guardar Documento
+                    <div class="mb-3">
+                        <label for="categoriaDropdown" class="form-label">Carpeta</label>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="categoriaDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Selecciona una carpeta
                             </button>
+                            <ul class="dropdown-menu" aria-labelledby="categoriaDropdown" id="categoria-list">
+
+                                @foreach ($categorias->whereNull('parent_id') as $categoria)
+                                    @include('documentos._category-dropdown-item', [
+                                        'categorias' => $categorias,
+                                    ])
+                                @endforeach
+                            </ul>
                         </div>
+                        <!-- Campo oculto para el ID de la categoría -->
+                        <input type="hidden" id="categoria_id" name="categoria_id" required>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="link" class="form-label">Link para los usuarios</label>
+                        <input type="url" class="form-control @error('link') is-invalid @enderror" id="link"
+                            name="link" value="{{ old('link') }}">
+                        <div class="form-text">Ejemplo: https://drive.google.com/...</div>
+                        @error('link')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="archivo" class="form-label">Archivo</label>
+                        <input class="form-control" type="file" id="archivo" name="archivo">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="estado" class="form-label">Estado <span class="text-danger">*</span></label>
+                        <select class="form-select" id="estado" name="estado" required>
+                            <option value="publicado" {{ old('estado') == 'publicado' ? 'selected' : '' }}>Publicado
+                            </option>
+                            <option value="borrador" {{ old('estado') == 'borrador' ? 'selected' : '' }}>Borrador
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="notificar_usuarios" name="notificar_usuarios"
+                            value="1" {{ old('notificar_usuarios') ? 'checked' : '' }}>
+                        <label class="form-check-label" for="notificar_usuarios">Enviar notificación a los usuarios al
+                            guardar</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ route('documentos.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </a>
+                        <button type="submit" class="btn btn-primary"
+                            style="background-color: #003764; color: white !important;">
+                            <i class="fas fa-save"></i> Guardar Documento
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

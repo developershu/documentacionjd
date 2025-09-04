@@ -5,26 +5,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="http://172.22.118.101:81/proyectsImages/favicon_color.png?raw=true"
-        type="image/x-icon">
+    <link rel="icon" href="http://172.22.118.101:81/proyectsImages/favicon_color.png?raw=true" type="image/x-icon">
 
     <title>Doc Junta Directiva</title>
 
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-    <script href="https://cdn.tailwindcss.com" rel="stylesheet"></script> 
-
-    
+    @vite(['resources/sass/app.scss'])
 
 
-    
-
-    @stack('styles')
 </head>
 
 <body>
@@ -34,9 +22,20 @@
             <div class="container">
                 {{-- Enlace del logo como parte del brand --}}
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="http://172.22.118.101:81/proyectsImages/logo_documentacion.png"
-                        alt="Logo" style="height: 80px; width: auto;" class="img-fluid">
+                    <img src="http://172.22.118.101:81/proyectsImages/logo_documentacion.png" alt="Logo"
+                        style="height: 80px; width: auto;" class="img-fluid">
                 </a>
+
+                {{-- Botón de busqueda --}}
+                <form class="d-flex" action="{{ route('documentos.index') }}" method="GET">
+                    <div class="input-group">
+                        <input class="form-control me-2" type="search" placeholder="Buscar documento..."
+                            aria-label="Search" name="q" value="{{ request('q') }}">
+                        <button class="btn btn-outline-light" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
 
                 {{-- Botón para menú en móviles (toggler) --}}
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -61,6 +60,7 @@
                         @endauth
                     </ul>
 
+                    </form>
                     {{-- Menú de Usuario --}}
                     <ul class="navbar-nav ms-auto">
                         @guest
@@ -90,9 +90,9 @@
                         @endguest
                     </ul>
                 </div>
+
             </div>
         </nav>
-
 
         {{-- Contenido Principal --}}
         <main class="py-4">

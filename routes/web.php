@@ -40,6 +40,10 @@ Route::middleware('auth')->group(function () {
     // Rutas para Categorías
     
     Route::resource('categorias', CategoriaController::class);
+
+    //rutas para comentarios    
+    Route::post('/documentos/{documento}/toggle-comentarios', [DocumentoController::class, 'toggleComentarios'])->name('documentos.toggle-comentarios');
+    Route::delete('/comentarios/{comentario}', [ComentarioController::class, 'destroy'])->name('comentarios.destroy');
 });
 
 

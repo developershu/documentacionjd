@@ -23,7 +23,7 @@ class RoleSeeder extends Seeder
         }
 
         // Asignar rol admin al usuario principal
-        $user3 = User::where('email', 'guillebermejo1@gmail.com')->first();
+        $user3 = User::where('email', 'guillermo.bermejo@hospital.uncu.edu.ar')->first();
         if ($user3 && !$user3->hasRole('admin')) {
             $user3->assignRole('admin');
         }

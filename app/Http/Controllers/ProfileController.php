@@ -74,6 +74,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'Tu cuenta ha sido eliminada.');
+        return redirect()->route('login')->with('success', 'Tu cuenta ha sido eliminada. Por favor comunicate con Dirección para reactivar tu cuenta.');
     }
 }
